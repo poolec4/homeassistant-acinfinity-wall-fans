@@ -77,6 +77,12 @@ OUTSIDE_CLIMATE_OPTIONS = {
 }
 OUTSIDE_CLIMATE_OPTIONS_REVERSE = {v: k for k, v in OUTSIDE_CLIMATE_OPTIONS.items()}
 
+TOWARD_OPTIONS = {
+    0: "Exhaust",
+    1: "Intake",
+}
+TOWARD_OPTIONS_REVERSE = {v: k for k, v in TOWARD_OPTIONS.items()}
+
 STANDARD_DEVICE_LOAD_TYPE_OPTIONS = {
     0: "No Device Type",
     1: "Grow Light",
@@ -170,6 +176,13 @@ def __get_value_fn_device_load_type(entity: ACInfinityEntity, device: ACInfinity
     ]
 
 
+def __get_value_fn_toward(entity: ACInfinityEntity, device: ACInfinityDevice):
+    val = entity.ac_infinity.get_device_setting(
+        device.controller.controller_id, device.device_port, AdvancedSettingsKey.TOWARD, 0
+    )
+    return TOWARD_OPTIONS.get(val, "Exhaust")
+
+
 def __set_value_fn_outside_climate(
     entity: ACInfinityEntity, controller: ACInfinityController, value: str
 ):
@@ -224,6 +237,14 @@ def __set_value_fn_dynamic_response_type(
         device,
         AdvancedSettingsKey.DYNAMIC_RESPONSE_TYPE,
         DYNAMIC_RESPONSE_OPTIONS_REVERSE[value],
+    )
+
+
+def __set_value_fn_toward(entity: ACInfinityEntity, device: ACInfinityDevice, value: str):
+    if value not in TOWARD_OPTIONS.values():
+        raise ValueError(f"Invalid airflow direction: {value}")
+    return entity.ac_infinity.update_device_setting(
+        device, AdvancedSettingsKey.TOWARD, TOWARD_OPTIONS_REVERSE[value]
     )
 
 
@@ -311,6 +332,16 @@ DEVICE_DESCRIPTIONS: list[ACInfinityDeviceSelectEntityDescription] = [
         get_value_fn=__get_value_fn_dynamic_response_type,
         set_value_fn=__set_value_fn_dynamic_response_type,
         at_type_fn=lambda at_type: True
+    ),
+    ACInfinityDeviceSelectEntityDescription(
+        key=AdvancedSettingsKey.TOWARD,
+        translation_key="airflow_direction",
+        options=list(TOWARD_OPTIONS.values()),
+        enabled_fn=enabled_fn_control,
+        suitable_fn=__suitable_fn_device_setting_basic_controller,
+        get_value_fn=__get_value_fn_toward,
+        set_value_fn=__set_value_fn_toward,
+        at_type_fn=lambda at_type: True,
     ),
 ]
 

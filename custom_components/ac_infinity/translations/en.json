@@ -24,6 +24,7 @@
         "data": {
           "controller": "{controller} (Controller)",
           "sensors": "Sensors",
+          "port_0": "{port_0} (Fan)",
           "port_1": "{port_1} (Port 1)",
           "port_2": "{port_2} (Port 2)",
           "port_3": "{port_3} (Port 3)",
@@ -31,7 +32,7 @@
           "port_5": "{port_5} (Port 5)",
           "port_6": "{port_6} (Port 6)",
           "port_7": "{port_7} (Port 7)",
-          "port_8": "{port_8} (Port 8)"
+          "port_8": "{port_8} (Port 8)",
         }
       }
     }
@@ -69,6 +70,7 @@
         "data": {
           "controller": "{controller} (Controller)",
           "sensors": "Sensors",
+          "port_0": "{port_0} (Fan)",
           "port_1": "{port_1} (Port 1)",
           "port_2": "{port_2} (Port 2)",
           "port_3": "{port_3} (Port 3)",
@@ -185,6 +187,9 @@
       },
       "sunrise_timer_minutes": {
         "name": "Sunrise/Sunset Minutes"
+      },
+      "display_brightness": { 
+        "name": "Display Brightness" 
       }
     },
     "select": {
@@ -208,9 +213,27 @@
       },
       "vpd_settings_mode": {
         "name": "VPD Settings Mode"
+      },
+      "airflow_direction": { 
+        "name": "Airflow Direction" 
       }
     },
     "sensor": {
+      "inside_temperature": { 
+        "name": "Inside Temperature" 
+      },
+      "outside_temperature": { 
+        "name": "Outside Temperature" 
+      },
+      "inside_temperature_trend": { 
+        "name": "Inside Temperature Trend" 
+      },
+      "outside_temperature_trend": { 
+        "name": "Outside Temperature Trend" 
+      },
+      "wall_fan_power": { 
+        "name": "Power" 
+      },
       "temperature": {
         "name": "Temperature"
       },
@@ -386,6 +409,18 @@
       },
       "sunrise_timer_enabled": {
         "name": "Sunrise/Sunset Enabled"
+      },
+      "power_state": { 
+        "name": "Power" 
+      },
+      "backlight_switch": { 
+        "name": "Backlight" 
+      },
+      "keytone_switch": { 
+        "name": "Keytone" 
+      },
+      "photocell_switch": { 
+        "name": "Auto-Dim Photocell" 
       }
     },
     "time": {

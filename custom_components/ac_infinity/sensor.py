@@ -89,10 +89,11 @@ class ACInfinityDeviceSensorEntityDescription(
 def __suitable_fn_controller_property_default(
     entity: ACInfinityEntity, controller: ACInfinityController
 ):
-    # The AI controller have two temperature measurements; controller temperature and probe temperature.
-    # These values are available in the sensor array.  The external values are duplicated on the base fields used by
-    # the non-AI controllers. We use the sensor array values as the source of truth, and choose not to duplicate them here
-    # by skipping the controller descriptions for the base values.
+    if controller.is_room_to_room_fan and entity.data_key in (
+        ControllerPropertyKey.TEMPERATURE,
+        ControllerPropertyKey.HUMIDITY,
+    ):
+        return False
     return not controller.is_ai_controller and entity.ac_infinity.get_controller_property_exists(
         controller.controller_id, entity.data_key
     )
@@ -270,6 +271,72 @@ CONTROLLER_DESCRIPTIONS: list[ACInfinityControllerSensorEntityDescription] = [
         enabled_fn=enabled_fn_sensor,
         suitable_fn=__suitable_fn_controller_property_default,
         get_value_fn=__get_value_fn_floating_point_as_int,
+    ),
+    ACInfinityControllerSensorEntityDescription(
+        key=DeviceControlKey.INSIDE_TEMP,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        suggested_unit_of_measurement=None,
+        icon="mdi:thermometer",
+        translation_key="inside_temperature",
+        enabled_fn=enabled_fn_sensor,
+        suitable_fn=__suitable_fn_controller_property_default,
+        get_value_fn=__get_value_fn_floating_point_as_int,
+    ),
+    ACInfinityControllerSensorEntityDescription(
+        key=DeviceControlKey.OUTSIDE_TEMP,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        suggested_unit_of_measurement=None,
+        icon="mdi:thermometer",
+        translation_key="outside_temperature",
+        enabled_fn=enabled_fn_sensor,
+        suitable_fn=__suitable_fn_controller_property_default,
+        get_value_fn=__get_value_fn_floating_point_as_int,
+    ),
+    ACInfinityControllerSensorEntityDescription(
+        key=DeviceControlKey.INSIDE_TREND,
+        device_class=None,
+        state_class=None,
+        native_unit_of_measurement=None,
+        suggested_unit_of_measurement=None,
+        icon="mdi:trending-up",
+        translation_key="inside_temperature_trend",
+        enabled_fn=enabled_fn_sensor,
+        suitable_fn=__suitable_fn_controller_property_default,
+        get_value_fn=lambda entity, controller: entity.ac_infinity.get_controller_property(
+            controller.controller_id, entity.data_key, 0
+        ),
+    ),
+    ACInfinityControllerSensorEntityDescription(
+        key=DeviceControlKey.OUTSIDE_TREND,
+        device_class=None,
+        state_class=None,
+        native_unit_of_measurement=None,
+        suggested_unit_of_measurement=None,
+        icon="mdi:trending-up",
+        translation_key="outside_temperature_trend",
+        enabled_fn=enabled_fn_sensor,
+        suitable_fn=__suitable_fn_controller_property_default,
+        get_value_fn=lambda entity, controller: entity.ac_infinity.get_controller_property(
+            controller.controller_id, entity.data_key, 0
+        ),
+    ),
+    ACInfinityControllerSensorEntityDescription(
+        key=DeviceControlKey.POWER,
+        device_class=None,
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=None,
+        suggested_unit_of_measurement=None,
+        icon="mdi:flash",
+        translation_key="wall_fan_power",
+        enabled_fn=enabled_fn_sensor,
+        suitable_fn=__suitable_fn_controller_property_default,
+        get_value_fn=lambda entity, controller: entity.ac_infinity.get_controller_property(
+            controller.controller_id, entity.data_key, 0
+        ),
     ),
 ]
 

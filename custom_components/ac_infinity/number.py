@@ -936,6 +936,22 @@ DEVICE_DESCRIPTIONS: list[ACInfinityDeviceNumberEntityDescription] = [
         set_value_fn=__set_value_fn_device_setting_default,
         at_type_fn=lambda at_type: True
     ),
+    ACInfinityDeviceNumberEntityDescription(
+        key=AdvancedSettingsKey.DEV_LIGHT,
+        device_class=None,
+        mode=NumberMode.AUTO,
+        native_min_value=0,
+        native_max_value=3,
+        native_step=1,
+        icon="mdi:brightness-6",
+        translation_key="display_brightness",
+        native_unit_of_measurement=None,
+        enabled_fn=enabled_fn_setting,
+        suitable_fn=__suitable_fn_device_setting_default,
+        get_value_fn=__get_value_fn_device_setting_default,
+        set_value_fn=__set_value_fn_device_setting_default,
+        at_type_fn=lambda at_type: True,
+    ),
 ]
 
 

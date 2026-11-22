@@ -127,6 +127,18 @@ class ACInfinityFlowBase:
                     }
                 })
 
+        device_type = ac_infinity.get_controller_property(device_id, ControllerPropertyKey.DEVICE_TYPE)
+        if port_count == 0 and device_type in ROOM_TO_ROOM_CONTROLLER_TYPES:
+            entity_config_key = "port_0"
+            description_placeholders[entity_config_key] = device_name
+            entities[vol.Required(entity_config_key, default=self.__get_saved_entity_conf_value(data, str(device_id), entity_config_key))] = selector(
+                {
+                    "select": {
+                        "options": ENTITY_CONFIG_OPTIONS_DEVICES,
+                        "mode": "dropdown"
+                    }
+                })
+
         return entities, description_placeholders
 
 

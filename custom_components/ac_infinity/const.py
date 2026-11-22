@@ -80,12 +80,18 @@ class ControllerType:
     UIS_89_AI_PLUS = 20
     UIS_OUTLET_AI = 21
     UIS_OUTLET_AI_PLUS = 22
+    THROUGH_WALL_FAN_8 = 33
 
 
 AI_CONTROLLER_TYPES = frozenset({
     ControllerType.UIS_89_AI_PLUS,
     ControllerType.UIS_OUTLET_AI,
     ControllerType.UIS_OUTLET_AI_PLUS
+})
+
+
+ROOM_TO_ROOM_CONTROLLER_TYPES = frozenset({
+    ControllerType.THROUGH_WALL_FAN_8,
 })
 
 

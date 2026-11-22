@@ -21,6 +21,7 @@ from custom_components.ac_infinity.client import ACInfinityClient, ACInfinityCli
     ACInfinityClientCannotConnect, ACInfinityClientRequestFailed
 from .const import (
     AI_CONTROLLER_TYPES,
+    ROOM_TO_ROOM_CONTROLLER_TYPES,
     DOMAIN,
     MANUFACTURER,
     ControllerPropertyKey,
@@ -60,7 +61,12 @@ class ACInfinityController:
         self._identifier = (DOMAIN, self._controller_id)
 
         devices = controller_json[ControllerPropertyKey.DEVICE_INFO][ControllerPropertyKey.PORTS] or []
-        self._devices = [ACInfinityDevice(self, device)for device in devices]
+        if not devices and self._controller_type in ROOM_TO_ROOM_CONTROLLER_TYPES:
+            devices = [{
+                DevicePropertyKey.PORT: 0,
+                DevicePropertyKey.NAME: self._controller_name,
+            }]
+        self._devices = [ACInfinityDevice(self, device) for device in devices]
 
         self._device_info = DeviceInfo(
             identifiers={self._identifier},
@@ -93,6 +99,11 @@ class ACInfinityController:
     def is_ai_controller(self) -> bool:
         """Returns true if this controller is an AI controller"""
         return self._controller_type in AI_CONTROLLER_TYPES
+
+    @property
+    def is_room_to_room_fan(self) -> bool:
+        """Returns true if this controller is a standalone room-to-room wall fan"""
+        return self._controller_type in ROOM_TO_ROOM_CONTROLLER_TYPES
 
     @property
     def mac_addr(self) -> str:
@@ -132,6 +143,8 @@ class ACInfinityController:
                 return "UIS Controller Outlet AI (AC-ADA4)"
             case ControllerType.UIS_OUTLET_AI_PLUS:
                 return "UIS Controller Outlet AI+ (AC-ADA8)"
+            case ControllerType.THROUGH_WALL_FAN_8:
+                return 'Smart Through Wall Fan 8" (AC-TWT8)'
             case _:
                 return f"UIS Controller Type {device_type}"
 
@@ -534,6 +547,13 @@ class ACInfinityService:
                         # retrieve and set port settings; Dynamic Response, Transition values, Buffer values, etc..
                         device_settings_json = await self._client.get_device_mode_settings(controller_id, device_port)
                         self._device_settings[(controller_id, device_port)] = device_settings_json[DeviceControlKey.DEV_SETTING]
+
+                    if (
+                        controller_properties_json.get(ControllerPropertyKey.DEVICE_TYPE) in ROOM_TO_ROOM_CONTROLLER_TYPES
+                        and not controller_properties_json[ControllerPropertyKey.DEVICE_INFO][ControllerPropertyKey.PORTS]
+                    ):
+                        self._device_properties[(controller_id, 0)] = controller_properties_json[ControllerPropertyKey.DEVICE_INFO]
+                        self._device_controls[(controller_id, 0)] = controller_settings_json
 
                 return  # update successful.  eject from the infinite while loop.
 
