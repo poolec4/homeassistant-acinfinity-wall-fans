@@ -23,7 +23,11 @@ from .const import (
     ConfigurationKey,
     DEFAULT_POLLING_INTERVAL,
     DOMAIN,
-    HOST, ControllerPropertyKey, DevicePropertyKey, EntityConfigValue,
+    HOST,
+    ROOM_TO_ROOM_CONTROLLER_TYPES,
+    ControllerPropertyKey,
+    DevicePropertyKey,
+    EntityConfigValue,
 )
 
 _LOGGER = logging.getLogger(__name__)
