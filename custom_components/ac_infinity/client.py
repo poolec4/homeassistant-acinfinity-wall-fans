@@ -202,7 +202,8 @@ class ACInfinityClient:
                 updated[ModeAndSettingKeys.MODE_AND_SETTING_ID_STR] = "[18]"
             elif DeviceControlKey.TOWARD in key_values:
                 updated[ModeAndSettingKeys.MODE_AND_SETTING_ID_STR] = "[17]"
-            elif DeviceControlKey.AT_TYPE in key_values:                at_type = updated[DeviceControlKey.AT_TYPE]
+            elif DeviceControlKey.AT_TYPE in key_values:
+                at_type = updated[DeviceControlKey.AT_TYPE]
                 match at_type:
                     case AtType.OFF:
                         updated[ModeAndSettingKeys.MODE_AND_SETTING_ID_STR] = "[16,17]"
