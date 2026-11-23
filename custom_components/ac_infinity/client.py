@@ -196,8 +196,19 @@ class ACInfinityClient:
 
         if is_room_to_room:
             updated[ModeAndSettingKeys.MODE_AND_SETTING_ID_STR] = "[22]"
-        else:
-            at_type = updated[DeviceControlKey.AT_TYPE]
+            for extra_key in (
+                ModeAndSettingKeys.PORT_PARAM_DATA,
+                ModeAndSettingKeys.SEC_FUC_PARAMS,
+                ModeAndSettingKeys.SENSOR_SETTING_STR,
+                ModeAndSettingKeys.SENSOR_TRANS_BUFF_STR,
+                ModeAndSettingKeys.SUB_DEVICE_VERSION,
+            ):
+                updated.pop(extra_key, None)
+            if updated.get(ModeAndSettingKeys.MODE_TYPE) == 15:
+                is_on = bool(updated.get(ModeAndSettingKeys.POWER_STATE, 0))
+                updated[ModeAndSettingKeys.MODE_TYPE] = 1 if is_on else 0
+                updated[ModeAndSettingKeys.AT_TYPE] = 0 if is_on else 1
+        else:            at_type = updated[DeviceControlKey.AT_TYPE]
             match at_type:
                 case AtType.OFF:
                     updated[ModeAndSettingKeys.MODE_AND_SETTING_ID_STR] = "[16,17]"
