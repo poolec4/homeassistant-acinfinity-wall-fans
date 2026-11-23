@@ -178,12 +178,6 @@ class ACInfinityClient:
 
         headers = self.__create_headers(use_auth_token=True, use_min_version=True)
         
-        if is_room_to_room:
-            headers["phoneType"] = "2"
-            headers["appVersion"] = "2.1.2"
-            headers["version"] = "2.1.2"
-            headers["devType"] = "33"
-
         body = await self.__post(
             API_URL_GET_DEV_MODE_SETTING, {"devId": controller_id, "port": device_port}, headers
         )
