@@ -640,7 +640,12 @@ class ACInfinityService:
             key_values: a list of key/value pairs to update, as a tuple of (setting_key, new_value)
         """
         if device.controller.is_ai_controller or device.controller.is_room_to_room_fan:
-            await self.__update_ai_control_and_settings(device.controller.controller_id, device.device_port, key_values)
+            await self.__update_ai_control_and_settings(
+                device.controller.controller_id,
+                device.device_port,
+                key_values,
+                is_room_to_room=device.controller.is_room_to_room_fan,
+            )
         else:
             await self.__update_advanced_settings(device.controller.controller_id, device.device_port, device.device_name, key_values)
 
@@ -665,7 +670,12 @@ class ACInfinityService:
         key_values: dict[str, int],
     ):
         if device.controller.is_ai_controller or device.controller.is_room_to_room_fan:
-            await self.__update_ai_control_and_settings(device.controller.controller_id, device.device_port, key_values)
+            await self.__update_ai_control_and_settings(
+                device.controller.controller_id,
+                device.device_port,
+                key_values,
+                is_room_to_room=device.controller.is_room_to_room_fan,
+            )
         else:
             await self.__update_device_controls(device.controller.controller_id, device.device_port, key_values)
 
@@ -754,6 +764,7 @@ class ACInfinityService:
         controller_id: str | int,
         device_port: int,
         key_values: dict[str, int],
+        is_room_to_room: bool = False,
     ):
         """Update the values of a set of settings via the AC Infinity API
 
@@ -765,7 +776,12 @@ class ACInfinityService:
         try_count = 0
         while True:
             try:
-                await self._client.update_ai_device_control_and_settings(controller_id, device_port, key_values)
+                await self._client.update_ai_device_control_and_settings(
+                    controller_id,
+                    device_port,
+                    key_values,
+                    is_room_to_room=is_room_to_room,
+                )
                 return
 
             except (
