@@ -177,11 +177,10 @@ def __get_value_fn_device_load_type(entity: ACInfinityEntity, device: ACInfinity
 
 
 def __get_value_fn_toward(entity: ACInfinityEntity, device: ACInfinityDevice):
-    val = entity.ac_infinity.get_device_setting(
-        device.controller.controller_id, device.device_port, AdvancedSettingsKey.TOWARD, 0
+    val = entity.ac_infinity.get_controller_property(
+        device.controller.controller_id, AdvancedSettingsKey.TOWARD, 0
     )
     return TOWARD_OPTIONS.get(val, "Exhaust")
-
 
 def __set_value_fn_outside_climate(
     entity: ACInfinityEntity, controller: ACInfinityController, value: str

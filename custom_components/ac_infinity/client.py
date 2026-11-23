@@ -195,7 +195,28 @@ class ACInfinityClient:
         updated = self.__transfer_values(device_control_keys, key_values, flattened)
 
         if is_room_to_room:
-            updated[ModeAndSettingKeys.MODE_AND_SETTING_ID_STR] = "[22]"
+            if (
+                DeviceControlKey.ON_SPEED in key_values
+                or DeviceControlKey.OFF_SPEED in key_values
+            ):
+                updated[ModeAndSettingKeys.MODE_AND_SETTING_ID_STR] = "[18]"
+            elif DeviceControlKey.AT_TYPE in key_values:
+                at_type = updated[DeviceControlKey.AT_TYPE]
+                match at_type:
+                    case AtType.OFF:
+                        updated[ModeAndSettingKeys.MODE_AND_SETTING_ID_STR] = "[16,17]"
+                    case AtType.ON:
+                        updated[ModeAndSettingKeys.MODE_AND_SETTING_ID_STR] = "[16,18]"
+                    case AtType.AUTO:
+                        updated[ModeAndSettingKeys.MODE_AND_SETTING_ID_STR] = "[16,19]"
+                    case AtType.TIMER_TO_ON | AtType.TIMER_TO_OFF:
+                        updated[ModeAndSettingKeys.MODE_AND_SETTING_ID_STR] = "[16,20]"
+                    case AtType.CYCLE | AtType.SCHEDULE:
+                        updated[ModeAndSettingKeys.MODE_AND_SETTING_ID_STR] = "[16,22]"
+                    case _:
+                        updated[ModeAndSettingKeys.MODE_AND_SETTING_ID_STR] = "[16,20]"
+            else:
+                updated[ModeAndSettingKeys.MODE_AND_SETTING_ID_STR] = "[22]"
             for extra_key in (
                 ModeAndSettingKeys.PORT_PARAM_DATA,
                 ModeAndSettingKeys.SEC_FUC_PARAMS,
@@ -209,7 +230,6 @@ class ACInfinityClient:
                 updated[ModeAndSettingKeys.MODE_TYPE] = 1 if is_on else 0
                 updated[ModeAndSettingKeys.AT_TYPE] = 0 if is_on else 1
         else:
-            at_type = updated[DeviceControlKey.AT_TYPE]
             match at_type:
                 case AtType.OFF:
                     updated[ModeAndSettingKeys.MODE_AND_SETTING_ID_STR] = "[16,17]"
