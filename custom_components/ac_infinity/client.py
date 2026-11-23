@@ -208,7 +208,8 @@ class ACInfinityClient:
                 is_on = bool(updated.get(ModeAndSettingKeys.POWER_STATE, 0))
                 updated[ModeAndSettingKeys.MODE_TYPE] = 1 if is_on else 0
                 updated[ModeAndSettingKeys.AT_TYPE] = 0 if is_on else 1
-        else:            at_type = updated[DeviceControlKey.AT_TYPE]
+        else:
+            at_type = updated[DeviceControlKey.AT_TYPE]
             match at_type:
                 case AtType.OFF:
                     updated[ModeAndSettingKeys.MODE_AND_SETTING_ID_STR] = "[16,17]"
