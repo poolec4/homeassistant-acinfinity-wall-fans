@@ -78,8 +78,8 @@ OUTSIDE_CLIMATE_OPTIONS = {
 OUTSIDE_CLIMATE_OPTIONS_REVERSE = {v: k for k, v in OUTSIDE_CLIMATE_OPTIONS.items()}
 
 TOWARD_OPTIONS = {
-    0: "Exhaust",
-    1: "Intake",
+    0: "Intake",
+    1: "Exhaust",
 }
 TOWARD_OPTIONS_REVERSE = {v: k for k, v in TOWARD_OPTIONS.items()}
 
@@ -180,8 +180,8 @@ def __get_value_fn_toward(entity: ACInfinityEntity, device: ACInfinityDevice):
     val = entity.ac_infinity.get_controller_property(
         device.controller.controller_id, AdvancedSettingsKey.TOWARD, 0
     )
-    return TOWARD_OPTIONS.get(val, "Exhaust")
-
+    return TOWARD_OPTIONS.get(val, "Intake")
+    
 def __set_value_fn_outside_climate(
     entity: ACInfinityEntity, controller: ACInfinityController, value: str
 ):
