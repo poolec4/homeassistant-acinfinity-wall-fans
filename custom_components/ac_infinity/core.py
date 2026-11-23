@@ -639,7 +639,7 @@ class ACInfinityService:
             device: the device
             key_values: a list of key/value pairs to update, as a tuple of (setting_key, new_value)
         """
-        if device.controller.is_ai_controller:
+        if device.controller.is_ai_controller or device.controller.is_room_to_room_fan:
             await self.__update_ai_control_and_settings(device.controller.controller_id, device.device_port, key_values)
         else:
             await self.__update_advanced_settings(device.controller.controller_id, device.device_port, device.device_name, key_values)
@@ -664,7 +664,7 @@ class ACInfinityService:
         device: ACInfinityDevice,
         key_values: dict[str, int],
     ):
-        if device.controller.is_ai_controller:
+        if device.controller.is_ai_controller or device.controller.is_room_to_room_fan:
             await self.__update_ai_control_and_settings(device.controller.controller_id, device.device_port, key_values)
         else:
             await self.__update_device_controls(device.controller.controller_id, device.device_port, key_values)
